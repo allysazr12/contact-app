@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 
         ApiError error = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_GATEWAY.getReasonPhrase(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 message,
                 request.getRequestURI()
         );
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
         ApiError error = new ApiError(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                "An unexpected error occured",
+                "An unexpected error occurred",
                 request.getRequestURI()
         );
 

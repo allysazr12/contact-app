@@ -40,9 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String username = jwtService.extractUsername(token);
 
-            if (username != null && SecurityContextHolder
+            if (username != null &&
+                    SecurityContextHolder
                     .getContext()
                     .getAuthentication() == null) {
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 if (jwtService.isTokenValid(token, userDetails)) {
@@ -61,10 +63,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder
                             .getContext()
                             .setAuthentication(authentication);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write(
+                            "{\"message\":\"Token is expired or invalid\"}"
+                    );
+                    return;
                 }
             }
         } catch (JwtException | IllegalArgumentException ex) {
-
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write(
+                    "{\"message\":\"Token is expired or invalid\"}"
+            );
+            return;
         }
 
         filterChain.doFilter(request, response);
